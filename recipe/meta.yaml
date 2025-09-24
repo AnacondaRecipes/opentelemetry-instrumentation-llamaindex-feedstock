@@ -1,52 +1,54 @@
 {% set name = "opentelemetry-instrumentation-llamaindex" %}
-{% set version = "0.47.3" %}
+{% set version = "0.47.2" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/opentelemetry_instrumentation_llamaindex-{{ version }}.tar.gz
-  sha256: 77e79d14cf9c3a0e34b8a986a2395c6732d121dba2a37d8ce43de77420d156b9
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
+  sha256: e43143869b6218bc25a00ea9c9b96feba7e85000ff9331b7f3fb4c5b936eb630
 
 build:
-  noarch: python
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [py<39]
 
 requirements:
   host:
-    - python {{ python_min }}
-    - poetry-core
     - pip
+    - python
+    - poetry-core
   run:
-    - python >={{ python_min }}
+    - python
     - opentelemetry-api >=1.28.0,<2.0.0
     - opentelemetry-instrumentation >=0.50b0
     - opentelemetry-semantic-conventions >=0.50b0
-    - opentelemetry-semantic-conventions-ai >=0.4.12,<0.5.0
+    - opentelemetry-semantic-conventions-ai >=0.4.13,<0.5.0
     - inflection >=0.5.1,<0.6.0
   run_constrained:
-    - llama-index >=0.12.6,<0.13.0
+    - llama-index >=0.12.52,<0.13.0
 
+# Unable to run tests and check imports, llama-index is not in the main channel.
 test:
-  imports:
-    - opentelemetry.instrumentation.llamaindex
   commands:
     - pip check
   requires:
     - pip
-    - python {{ python_min }}
-    - llama-index
 
 about:
   home: https://www.traceloop.com/openllmetry
-  dev_url: https://github.com/traceloop/openllmetry
-  doc_url: https://www.traceloop.com/docs/openllmetry/introduction
   summary: OpenTelemetry LlamaIndex instrumentation
   license: Apache-2.0
+  license_family: Apache
   license_file: LICENSE
+  description: This library allows tracing complete LLM applications built with LlamaIndex.
+  dev_url: https://github.com/traceloop/openllmetry
+  doc_url: https://www.traceloop.com/docs/openllmetry/introduction
 
 extra:
   recipe-maintainers:
     - timkpaine
+  skip-lints:
+    - missing_imports_or_run_test_py
+    - invalid_url
