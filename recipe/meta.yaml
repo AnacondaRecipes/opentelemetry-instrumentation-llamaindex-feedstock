@@ -29,10 +29,8 @@ requirements:
   run_constrained:
     - llama-index >=0.14.12,<0.15.0
 
-# Unable to run tests and check imports, llama-index is not in the main channel.
+# Unable to run tests and check imports, llama-index for python 3.14 is not in the main channel.
 test:
-  imports:
-    - opentelemetry.instrumentation.llamaindex
   commands:
     - pip check
   requires:
@@ -52,4 +50,5 @@ extra:
   recipe-maintainers:
     - timkpaine
   skip-lints:
+    - missing_imports_or_run_test_py
     - invalid_url
